@@ -13,7 +13,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import java.awt.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 
 public class Main extends Application implements EventHandler<ActionEvent> {
     Stage test = new Stage();
@@ -76,7 +80,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     }
 
     @Override
-    public void handle(ActionEvent event) {
+    public void handle(ActionEvent event){
         //Stage test = new Stage();
         GridPane root = new GridPane();
         GridPane admin = new GridPane();
@@ -95,26 +99,76 @@ public class Main extends Application implements EventHandler<ActionEvent> {
             test.setScene(scene);
             test.show();
 
-            //Appel API affichage des parcours
+            //Appel API affichage des associations
+            String url = "https://thawing-fjord-12780.herokuapp.com/associations";
+            try {
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+                con.setRequestProperty("User-Agent", "Mozilla/5.0");
+                int responseCode = con.getResponseCode();
+                System.out.println("Response = " + responseCode);
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                System.out.println(response.toString());
+            } catch (Exception e ) {
+
+            }
+
+
+
         } else {
             Scene scene = new Scene(root , 300, 300);
             test.setTitle("AssoEcolo");
             test.setScene(scene);
             test.show();
 
-            parcours.setOnAction(this::handleParcours);
+            parcours.setOnAction(event1 -> {
+                try {
+                    handleParcours(event1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         }
 
 
     }
 
-    public void handleParcours(ActionEvent event) {
+    public void handleParcours(ActionEvent event) throws Exception {
         GridPane root = new GridPane();
         Scene scene = new Scene(root , 300, 300);
         test.setTitle("Parcours");
         test.setScene(scene);
         test.show();
 
-        //Appel API affichage des parcours
+        String url = "https://thawing-fjord-12780.herokuapp.com/events";
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("User-Agent", "Mozilla/5.0");
+        int responseCode = con.getResponseCode();
+        System.out.println("Response = " + responseCode);
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        System.out.println(response.toString());
+
+
+
+        //Faire un scroll view pour tous les parcours
     }
 }
