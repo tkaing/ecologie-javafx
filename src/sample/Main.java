@@ -1,13 +1,15 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -19,60 +21,24 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
+
+
 public class Main extends Application implements EventHandler<ActionEvent> {
     Stage test = new Stage();
     Button loginButton;
     TextField fieldUserName;
     PasswordField fieldPassword;
 
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        GridPane root = new GridPane();
-
-        root.setPadding(new Insets(20));
-        root.setHgap(25);
-        root.setVgap(15);
-
-        Label labelTitle = new Label("Enter your user name and password!");
-
-        // Put on cell (0,0), span 2 column, 1 row.
-        root.add(labelTitle, 0, 0, 2, 1);
-
-        Label labelUserName = new Label("User Name");
-        fieldUserName = new TextField();
-
-        Label labelPassword = new Label("Password");
-
-        fieldPassword = new PasswordField();
-
-        loginButton = new Button("Login");
-        loginButton.setOnAction(this::handle);
-
-        GridPane.setHalignment(labelUserName, HPos.RIGHT);
-
-        // Put on cell (0,1)
-        root.add(labelUserName, 0, 1);
+        Parent root = FXMLLoader.load(getClass().getResource("/sample/Login.fxml"));
 
 
-        GridPane.setHalignment(labelPassword, HPos.RIGHT);
-        root.add(labelPassword, 0, 2);
-
-        // Horizontal alignment for User Name field.
-        GridPane.setHalignment(fieldUserName, HPos.LEFT);
-        root.add(fieldUserName, 1, 1);
-
-        // Horizontal alignment for Password field.
-        GridPane.setHalignment(fieldPassword, HPos.LEFT);
-        root.add(fieldPassword, 1, 2);
-
-        // Horizontal alignment for Login button.
-        GridPane.setHalignment(loginButton, HPos.RIGHT);
-        root.add(loginButton, 1, 3);
-
-        Scene scene = new Scene(root, 300, 300);
-        primaryStage.setTitle("AssoEcolo");
+        Scene scene = new Scene(root, 400,400);
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
 
     public static void main(String[] args) {
@@ -94,10 +60,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         root.add(Chat, 2, 0, 1, 1);
 
         if (fieldUserName.getText().toString().equals("admin") && fieldPassword.getText().toString().equals("admin")) {
-            Scene scene = new Scene(admin , 300 , 300);
-            test.setTitle("Admin");
-            test.setScene(scene);
-            test.show();
+
+
 
             //Appel API affichage des associations
             String url = "https://thawing-fjord-12780.herokuapp.com/associations";
@@ -118,6 +82,21 @@ public class Main extends Application implements EventHandler<ActionEvent> {
                 in.close();
 
                 System.out.println(response.toString());
+
+
+                String nameAssos[] = response.toString().split(":");
+                String name[] = nameAssos[3].split(",");
+                System.out.println(name[0]);
+
+                ObservableList<String> nameList = FXCollections.<String>observableArrayList(name[0]);
+                ListView<String> LV = new ListView<>(nameList);
+                admin.add(LV, 0, 0, 1, 1);
+
+                Scene scene = new Scene(admin , 300 , 300);
+                test.setTitle("Admin");
+                test.setScene(scene);
+                test.show();
+
             } catch (Exception e ) {
 
             }
@@ -144,12 +123,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     public void handleParcours(ActionEvent event) throws Exception {
         GridPane root = new GridPane();
-        Scene scene = new Scene(root , 300, 300);
-        test.setTitle("Parcours");
-        test.setScene(scene);
-        test.show();
 
-        String url = "https://thawing-fjord-12780.herokuapp.com/events";
+        String url = "https://thawing-fjord-12780.herokuapp.com/courses";
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
@@ -166,8 +141,15 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         in.close();
 
         System.out.println(response.toString());
+//ListView Parcours a définir ??
+        ObservableList<String> nameList = FXCollections.<String>observableArrayList("");
+        ListView<String> LV = new ListView<>(nameList);
+        root.add(LV, 0, 0, 1, 1);
 
-
+        Scene scene = new Scene(root , 300, 300);
+        test.setTitle("Parcours");
+        test.setScene(scene);
+        test.show();
 
         //Faire un scroll view pour tous les parcours
     }

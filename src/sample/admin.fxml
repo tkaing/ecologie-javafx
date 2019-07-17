@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Admin">
+   <children>
+      <ListView fx:id="lvCourses" layoutX="25.0" layoutY="72.0" onMouseClicked="#handleMouseClick" prefHeight="322.0" prefWidth="227.0" />
+      <ListView fx:id="lvAssos" layoutX="346.0" layoutY="72.0" prefHeight="322.0" prefWidth="227.0" />
+      <Label layoutX="25.0" layoutY="36.0" prefHeight="33.0" prefWidth="186.0" text="Courses" />
+   </children>
+</AnchorPane>
